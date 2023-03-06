@@ -1,6 +1,5 @@
 import tensorflow as tf
 import numpy as np
-
 from tqdm import tqdm
 from tensorflow.keras.layers import Dense, LSTM, Embedding
 from tensorflow.keras.models import Sequential
@@ -19,8 +18,10 @@ class NextWordLSTM(tf.keras.Sequential):
         self.model.add(Embedding(input_dim=self.vocab_size, output_dim=100, input_length=self.max_seq_len))
         self.model.add(LSTM(units=150, return_sequences=True))
         self.model.add(LSTM(units=150))
-        self.model.add(Dense(units=self.vocab_size, activation='softmax'))
+        self.model.add(Dense(units=self.vocab_size, activation='softmax')) # Output1  #inpur for output2
+        self.model.add(Dense(units=self.vocab_size, activation='softmax')) # output2
         self.model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
 
     def train(self, X_train, y_train, to_validatate = False, X_val=None, y_val=None, epochs=1, verbose=1):
         if not self.model:
