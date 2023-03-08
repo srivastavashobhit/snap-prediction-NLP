@@ -15,7 +15,7 @@ def get_update_time_split_thershold(entries, thershold_at_percentile=.80):
     update_time_ar = np.asarray(update_times)
     return  np.quantile(update_time_ar, thershold_at_percentile)
 
-def write_corpa(fname_train, fname_test, entries, update_time_80_percentile):
+def write_corpora(fname_train, fname_test, entries, update_time_80_percentile):
     with open(fname_train, 'w') as f_train, open(fname_test, 'w') as f_test:
         for entry_sr in range(len(entries)):
             update_time =  entries[entry_sr]['update_time']['$date']
@@ -57,4 +57,4 @@ if __name__ == "__main__":
     test_file = "corpora/snaps_corpa_test.txt"
     entries = get_from_json(json_file, "entries")
     update_time_80_percentile = get_update_time_split_thershold(entries, 0.80)
-    write_corpa(train_file, test_file,entries, update_time_80_percentile)
+    write_corpora(train_file, test_file,entries, update_time_80_percentile)
