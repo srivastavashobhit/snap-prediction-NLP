@@ -46,7 +46,11 @@ def write_corpora(fname_train, fname_test, entries, update_time_80_percentile):
                     for snap_node in path[1:]:
                         snap_node_cid = entries[entry_sr]['snap_map'][snap_node]['class_id']
                         assert snap_node_cid[0:20] == "com-snaplogic-snaps-",  snap_node_cid
-                        paths_str += (" "+ snap_node_cid[20:])
+                        if snap_node_cid[0:20] == "com-snaplogic-snaps-":
+                            paths_str += (" "+ snap_node_cid[20:])
+                        else:
+                            print("Following snap does not starts with com-snaplogic-snaps- : ", snap_node_cid)
+                            paths_str += (" "+ snap_node_cid)
                     
                     f.write(paths_str + "\n")
 
