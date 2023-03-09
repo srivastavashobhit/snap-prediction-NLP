@@ -1,7 +1,7 @@
 import json
 import numpy as np
 
-from utils.graphs import *
+from utils.parse_utils import *
 
 def get_from_json(fname, field_name):
     f_master = open(fname)
