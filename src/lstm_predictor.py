@@ -1,12 +1,14 @@
 import tensorflow as tf
-import argparse
 from utils.lstm_utils import *
+import argparse
+import pickle
 import os
-import dill
-import pickle 
+
 if __name__ == "__main__":
 
+
     parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--input', type=str, help="Input Snap Text")
     parser.add_argument('-f', '--file', type=str, help="Input Snap Text File", default="corpora/snaps_corpa_test.txt")
     parser.add_argument('-m', '--model', type=str, help="Model Path")
 
@@ -32,14 +34,17 @@ if __name__ == "__main__":
         # Load the model from the file
         model = pickle.load(model_file)
 
-    test_file = args.file
-    test_sentence_inputs, test_sentence_outputs = get_test_data(test_file)
+    input_sequences = None
 
-    top_n = 5
-    test_sentence_predictions_top_n = model.predict_all_top_n(test_sentence_inputs,top_n)
+    if args.input:
+        input_sequences = [args.input]
+        
+    elif args.file:
+        with open(args.file, 'r') as file:
+            input_sequences = [line.strip() for line in file]
 
-    accuracy = top_5_accuracy(test_sentence_predictions_top_n, test_sentence_outputs)
-
-    print("The top",top_n,"accuracy is {:0.2f}".format(accuracy))
-
+    if input_sequences:
+        y_pred = model.predict_all_top_n(input_sequences,1)
+        print(y_pred)
+    
     

@@ -38,19 +38,30 @@ def generate_train_data(data_file):
 def get_all_subsets(words):
     subsets = []
     line_len = len(words)
+
     for i in range(2, line_len+1):
         for j in range(line_len-i+1):
-            subset = words[j:j+i]
-            subsets.append(subset)
+            subsets.append( words[j:j+i])
+
     return subsets
 
-def get_test_data(test_file):
+def get_continuous_subsets(words, min_input_len):
+    subsets = []
+
+    line_len = len(words)
+
+    for i in range(line_len - min_input_len + 1):
+        for j in range(i + min_input_len, line_len + 1):
+            subsets.append(words[i:j])
+    return subsets
+
+def get_test_data(test_file, min_input_len=2):
     input_sequences = []
     outputs = []
     with open(test_file, 'r', encoding='utf8') as f:
         for line in f:
             words = line.strip().split(" ")
-            words_combinations = get_all_subsets(words)
+            words_combinations = get_continuous_subsets(words, min_input_len+1)
             for words_combination in words_combinations:
                 input_sequence = " ".join(words_combination[:-1])
                 output = words_combination[-1]
@@ -58,7 +69,6 @@ def get_test_data(test_file):
                 outputs.append(output)
     
     return input_sequences, outputs
-
 def calculate_accuracy(test_sentence_outputs, test_predictions):
     correct_cnt = 0
     for x,y in zip(test_sentence_outputs, test_predictions):
@@ -66,33 +76,7 @@ def calculate_accuracy(test_sentence_outputs, test_predictions):
             correct_cnt += 1
     return correct_cnt/len(test_sentence_outputs)
 
-def predict_all_top_n(model, input_sequences, tokenizer, max_sequence_len, top_n):
-    predictions = []
-    for input_sequence in tqdm(input_sequences):
-        # Convert seed text to integer sequence
-        sequence = tokenizer.texts_to_sequences([input_sequence])[0]
-        # Pad sequence to same length as input sequences
-        sequence = pad_sequences([sequence], maxlen=max_sequence_len-1, padding='pre')
-        # Predict next word
-        predicted = model.predict(sequence, verbose=0)
-        top_n_indices = np.argsort(predicted.reshape(149))[-top_n:][::-1]
-        # print(top_n_indices)
-        # Convert integer to word
-        prediction_top_n = []
-        for predicted_class_top_n in top_n_indices:
-            prediction = ""
-            not_found_word_index = True
-            for word, index in tokenizer.word_index.items():
-                if index == predicted_class_top_n:
-                    not_found_word_index = False
-                    prediction_top_n.append(word)
-                    break
-            if not_found_word_index:
-                prediction_top_n.append(prediction)
-        predictions.append(prediction_top_n)
-    return predictions
-
-# def predict_all(model, input_sequences, tokenizer, max_sequence_len):
+# def predict_all_top_n(model, input_sequences, tokenizer, max_sequence_len, top_n):
 #     predictions = []
 #     for input_sequence in tqdm(input_sequences):
 #         # Convert seed text to integer sequence
@@ -101,15 +85,20 @@ def predict_all_top_n(model, input_sequences, tokenizer, max_sequence_len, top_n
 #         sequence = pad_sequences([sequence], maxlen=max_sequence_len-1, padding='pre')
 #         # Predict next word
 #         predicted = model.predict(sequence, verbose=0)
-#         predicted_class = np.argmax(predicted)
-#         predicted_class = np.argmax(predicted)
+#         top_n_indices = np.argsort(predicted.reshape(149))[-top_n:][::-1]
 #         # Convert integer to word
-#         prediction = ""
-#         for word, index in tokenizer.word_index.items():
-#             if index == predicted_class:
-#                 prediction = word
-#                 break
-#         predictions.append(prediction)
+#         prediction_top_n = []
+#         for predicted_class_top_n in top_n_indices:
+#             prediction = ""
+#             not_found_word_index = True
+#             for word, index in tokenizer.word_index.items():
+#                 if index == predicted_class_top_n:
+#                     not_found_word_index = False
+#                     prediction_top_n.append(word)
+#                     break
+#             if not_found_word_index:
+#                 prediction_top_n.append(prediction)
+#         predictions.append(prediction_top_n)
 #     return predictions
 
 def top_5_accuracy(predictions, ground_truth):

@@ -1,5 +1,5 @@
 from models.baseline_model import NLTKBaseLine
-from utils.baseline_driver_utils import get_test_data, calculate_accuracy
+from utils.baseline_utils import get_test_data, calculate_accuracy
 
 if __name__ == "__main__":
 
@@ -14,9 +14,11 @@ if __name__ == "__main__":
     model.build()
     model.train(train_corpus)
 
-    test_sentence_inputs, test_sentence_outputs = get_test_data(test_file)
+    top_n = 5
 
-    test_predictions = model.predict_all(test_sentence_inputs)
+    test_sentence_inputs, test_sentence_outputs = get_test_data(test_file, sequence_length)
+
+    test_predictions = model.predict_all_top_n(test_sentence_inputs, top_n)
 
     accuracy = calculate_accuracy(test_sentence_outputs, test_predictions)
 
@@ -25,7 +27,7 @@ if __name__ == "__main__":
 
     test_sentence_inputs, test_sentence_outputs = get_test_data(train_file, sequence_length)
 
-    test_predictions = model.predict_all(test_sentence_inputs)
+    test_predictions = model.predict_all_top_n(test_sentence_inputs, top_n)
 
     accuracy = calculate_accuracy(test_sentence_outputs, test_predictions)
 

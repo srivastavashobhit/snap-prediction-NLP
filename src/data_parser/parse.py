@@ -1,7 +1,7 @@
 import json
 import numpy as np
 
-from utils.parse_utils import *
+from utils.data_graph_utils import *
 
 def get_from_json(fname, field_name):
     f_master = open(fname)
@@ -29,8 +29,6 @@ def write_corpora(fname_train, fname_test, entries, update_time_80_percentile):
             for link_key in entries[entry_sr]['link_map'].keys():
                 src_id = entries[entry_sr]['link_map'][link_key]['src_id']
                 dst_id = entries[entry_sr]['link_map'][link_key]['dst_id']
-                # src_class_id = entries[entry_sr]['snap_map'][src_id]['class_id']
-                # dst_class_id = entries[entry_sr]['snap_map'][dst_id]['class_id']
                 edges_snaps.append((src_id,dst_id))
 
             graph_dict = build_graph(edges_snaps)
