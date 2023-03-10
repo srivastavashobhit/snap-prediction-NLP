@@ -9,6 +9,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', type=str, help="Input Snap Text File", default="corpora/snaps_corpa_test.txt")
     parser.add_argument('-m', '--model', type=str, help="Model Path")
+    parser.add_argument('-n', '--topn', type=str, help="TOP N Accuracy", default = 5)
 
     args = parser.parse_args()
 
@@ -35,7 +36,7 @@ if __name__ == "__main__":
     test_file = args.file
     test_sentence_inputs, test_sentence_outputs = get_test_data(test_file)
 
-    top_n = 5
+    top_n = int(args.topn)
     test_sentence_predictions_top_n = model.predict_all_top_n(test_sentence_inputs,top_n)
 
     accuracy = top_5_accuracy(test_sentence_predictions_top_n, test_sentence_outputs)

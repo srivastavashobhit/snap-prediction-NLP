@@ -26,12 +26,12 @@ if __name__ == "__main__":
     print("Train Data Create. Size:",label.shape)
 
     epochs = 100
-    model = NextWordLSTM(--1, total_words, tokenizer)
-    # model.build_model()
+    model = NextWordLSTM(max_sequence_len-1, total_words, tokenizer)
+    model.build_model()
 
     print("LSTM Model Instantiated")
     print("Starting Training")
-    model.train(X_train, y_train, to_validatate = True, X_val=X_val, y_val=y_val, epochs=2, verbose=1)
+    model.train(X_train, y_train, to_validatate = True, X_val=X_val, y_val=y_val, epochs=epochs, verbose=1)
 
     time_str = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
     dest_dir = args.dest + time_str

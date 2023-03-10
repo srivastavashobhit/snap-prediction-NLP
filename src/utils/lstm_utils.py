@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+import os
 from tqdm import tqdm
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -108,3 +109,11 @@ def top_5_accuracy(predictions, ground_truth):
             correct += 1
     accuracy = correct / len(ground_truth)
     return accuracy
+
+def get_most_recent_model_path(dir_path = "saved_trained_models\lstm", model_name="lstm.pkl"):
+    # Get a list of all subdirectories in the directory
+    subdirs = [os.path.join(dir_path, subdir) for subdir in os.listdir(dir_path) if os.path.isdir(os.path.join(dir_path, subdir))]
+    # Sort the subdirectories by name (timestamp) in reverse chronological order
+    sorted_subdirs = sorted(subdirs, key=lambda x: os.path.basename(x), reverse=True)
+    # Get the most recent subdirectory
+    return os.path.join(sorted_subdirs[0],model_name)
