@@ -8,10 +8,9 @@
 2. To train the model on custom dataset, when data is saved in a txt file with each line as a list of Snaps.
 
     `python lstm_trainer.py -f [path_to_text_file]`
-[path_to_text_file]
 
 ## Evaluate
-### Metric - TOP 5 Accuracy. 
+#### Metric - Current Top 5 Accuracy - 50%. 
 1. To evaluate the model on the default test data with latest model.
 
     `python lstm_evaluator.py`
